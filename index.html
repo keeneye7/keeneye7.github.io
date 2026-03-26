@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>keeneyes</title>
+<meta name="description" content="Observations on engineering in the age of AI">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Noto+Sans+KR:wght@300;400;500;700;900&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0a0b;
+  --bg-elevated: #111113;
+  --bg-card: #161618;
+  --text: #e8e6e3;
+  --text-muted: #7a7a7d;
+  --text-dim: #4a4a4d;
+  --accent: #c8ff00;
+  --accent-dim: #3d4d00;
+  --border: #222225;
+  --font-display: 'Playfair Display', serif;
+  --font-body: 'Noto Sans KR', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; scrollbar-width: thin; scrollbar-color: var(--accent-dim) var(--bg); }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-weight: 300;
+  line-height: 1.8;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+::selection { background: var(--accent); color: var(--bg); }
+a { color: inherit; text-decoration: none; }
+
+/* ─── LAYOUT ─── */
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 40px;
+  width: 100%;
+}
+
+/* ─── HEADER ─── */
+header {
+  padding: 160px 0 80px;
+  position: relative;
+  overflow: hidden;
+}
+
+header::before {
+  content: '';
+  position: absolute;
+  top: -300px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1000px;
+  height: 1000px;
+  background: radial-gradient(circle, rgba(200,255,0,0.02) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.header-logo {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 48px;
+  letter-spacing: -2px;
+  margin-bottom: 16px;
+  opacity: 0;
+  animation: fadeUp 0.8s ease 0.1s forwards;
+}
+
+.header-logo span { color: var(--accent); }
+
+.header-tagline {
+  font-size: 18px;
+  color: var(--text-dim);
+  max-width: 500px;
+  opacity: 0;
+  animation: fadeUp 0.8s ease 0.3s forwards;
+}
+
+.header-links {
+  margin-top: 24px;
+  display: flex;
+  gap: 24px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  opacity: 0;
+  animation: fadeUp 0.8s ease 0.5s forwards;
+}
+
+.header-links a {
+  color: var(--text-dim);
+  transition: color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.header-links a:hover { color: var(--accent); }
+
+.header-links svg { width: 16px; height: 16px; }
+
+/* ─── POSTS ─── */
+.posts-header {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 0;
+}
+
+.post-card {
+  display: block;
+  padding: 32px 0;
+  border-bottom: 1px solid var(--border);
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.post-card:hover {
+  padding-left: 16px;
+}
+
+.post-card:hover .post-title { color: var(--accent); }
+
+.post-card:hover::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 32px;
+  bottom: 32px;
+  width: 3px;
+  background: var(--accent);
+  border-radius: 2px;
+}
+
+.post-meta {
+  display: flex;
+  gap: 16px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-bottom: 12px;
+}
+
+.post-number {
+  color: var(--accent-dim);
+  font-weight: 700;
+}
+
+.post-title {
+  font-weight: 700;
+  font-size: 22px;
+  line-height: 1.4;
+  margin-bottom: 8px;
+  transition: color 0.2s;
+}
+
+.post-excerpt {
+  font-size: 15px;
+  color: var(--text-dim);
+  max-width: 600px;
+}
+
+.post-tags {
+  margin-top: 12px;
+  display: flex;
+  gap: 8px;
+}
+
+.tag {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  padding: 3px 10px;
+  border-radius: 4px;
+  background: var(--bg-card);
+  color: var(--text-dim);
+  border: 1px solid var(--border);
+}
+
+/* ─── ABOUT SECTION ─── */
+.about {
+  margin-top: 80px;
+  padding: 40px 0;
+  border-top: 1px solid var(--border);
+}
+
+.about-grid {
+  display: grid;
+  grid-template-columns: 64px 1fr;
+  gap: 20px;
+  align-items: start;
+}
+
+.about-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--accent-dim);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 24px;
+  color: var(--accent);
+}
+
+.about-name {
+  font-weight: 500;
+  font-size: 16px;
+  margin-bottom: 4px;
+}
+
+.about-bio {
+  font-size: 14px;
+  color: var(--text-dim);
+  line-height: 1.7;
+}
+
+/* ─── FOOTER ─── */
+footer {
+  margin-top: auto;
+  border-top: 1px solid var(--border);
+  padding: 32px 0;
+}
+
+.footer-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-dim);
+}
+
+.footer-logo { font-weight: 700; }
+.footer-logo span { color: var(--accent-dim); }
+
+/* ─── ANIMATIONS ─── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 768px) {
+  .container { padding: 0 20px; }
+  header { padding: 120px 0 60px; }
+  .header-logo { font-size: 36px; }
+  .post-title { font-size: 18px; }
+  .footer-inner { flex-direction: column; gap: 8px; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <!-- HEADER -->
+  <header>
+    <div class="header-logo">keen<span>eyes</span></div>
+    <p class="header-tagline">Observations on engineering in the age of AI</p>
+    <div class="header-links">
+      <a href="https://github.com/keeneye7" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+        GitHub
+      </a>
+    </div>
+  </header>
+
+  <!-- POSTS -->
+  <div class="posts-header reveal">ARTICLES</div>
+
+  <a href="posts/01-token-efficiency.html" class="post-card reveal">
+    <div class="post-meta">
+      <span class="post-number">#01</span>
+      <span>2026.03.27</span>
+      <span>12 min read</span>
+    </div>
+    <div class="post-title">ccusage 그래프가 높으면 잘 쓰고 있는 걸까?</div>
+    <p class="post-excerpt">Spring Boot 개발 환경에서 플러그인 극단 벤치마크로 증명하는 "토큰을 많이 쓰는 게 잘 쓰는 것이다"가 틀린 이유</p>
+    <div class="post-tags">
+      <span class="tag">Claude Code</span>
+      <span class="tag">Token Economics</span>
+      <span class="tag">Spring Boot</span>
+      <span class="tag">JVM</span>
+    </div>
+  </a>
+
+  <!-- ABOUT -->
+  <div class="about reveal">
+    <div class="about-grid">
+      <div class="about-avatar">K</div>
+      <div>
+        <div class="about-name">keeneyes</div>
+        <div class="about-bio">
+          Backend engineer. Distributed systems, gRPC serving layers, AI-augmented workflows.<br>
+          토큰 효율성, 에이전트 아키텍처, 시니어 IC의 진화에 대해 씁니다.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-logo">keen<span>eyes</span></div>
+      <span>© 2026 — Observations on engineering in the age of AI</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) entry.target.classList.add('visible');
+  });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
